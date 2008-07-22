@@ -1,0 +1,134 @@
+Format: 1.35
+
+
+# You can add a title and sub-title to your menu like this:
+# Title: [project name]
+# SubTitle: [subtitle]
+
+# You can add a footer to your documentation like this:
+# Footer: [text]
+# If you want to add a copyright notice, this would be the place to do it.
+
+
+# --------------------------------------------------------------------------
+# 
+# Cut and paste the lines below to change the order in which your files
+# appear on the menu.  Don't worry about adding or removing files, Natural
+# Docs will take care of that.
+# 
+# You can further organize the menu by grouping the entries.  Add a
+# "Group: [name] {" line to start a group, and add a "}" to end it.
+# 
+# You can add text and web links to the menu by adding "Text: [text]" and
+# "Link: [name] ([URL])" lines, respectively.
+# 
+# The formatting and comments are auto-generated, so don't worry about
+# neatness when editing the file.  Natural Docs will clean it up the next
+# time it is run.  When working with groups, just deal with the braces and
+# forget about the indentation and comments.
+# 
+# --------------------------------------------------------------------------
+
+
+Group: Com  {
+
+   Group: Audio  {
+
+      File: mp3Player  (com/mab/audio/mp3Player.as)
+      File: mp3Sound  (com/mab/audio/mp3Sound.as)
+      }  # Group: Audio
+
+   Group: Drawing  {
+
+      File: Graphic  (com/mab/drawing/Graphic.as)
+      File: shapeMaker  (com/mab/drawing/shapeMaker.as)
+      }  # Group: Drawing
+
+   Group: Data  {
+
+      File: dbFlashDecode  (com/mab/data/dbFlashDecode.as)
+      File: Validator  (com/mab/data/Validator.as)
+      File: xmlParser  (com/mab/data/xmlParser.as)
+      }  # Group: Data
+
+   Group: Loading  {
+
+      File: easingLoader  (com/mab/loading/easingLoader.as)
+      File: loadingProgress  (com/mab/loading/loadingProgress.as)
+      File: staticLoader  (com/mab/loading/staticLoader.as)
+      }  # Group: Loading
+
+   Group: Motion  {
+
+      Group: Easing  {
+
+         File: Back  (com/mab/motion/easing/Back.as)
+         File: Bounce  (com/mab/motion/easing/Bounce.as)
+         File: Circ  (com/mab/motion/easing/Circ.as)
+         File: Cubic  (com/mab/motion/easing/Cubic.as)
+         File: Elastic  (com/mab/motion/easing/Elastic.as)
+         File: Expo  (com/mab/motion/easing/Expo.as)
+         File: Linear  (com/mab/motion/easing/Linear.as)
+         File: Quad  (com/mab/motion/easing/Quad.as)
+         File: Quart  (com/mab/motion/easing/Quart.as)
+         File: Quint  (com/mab/motion/easing/Quint.as)
+         File: Sine  (com/mab/motion/easing/Sine.as)
+         }  # Group: Easing
+
+      File: Vector  (com/mab/motion/Vector.as)
+      File: VectorView  (com/mab/motion/VectorView.as)
+      }  # Group: Motion
+
+   Group: Ui  {
+
+      Group: Scrolling  {
+
+         File: basicScroller  (no auto-title, com/mab/ui/scrolling/basicScroller.as)
+         File: scrollCore  (no auto-title, com/mab/ui/scrolling/scrollCore.as)
+         }  # Group: Scrolling
+
+      File: BasicButton  (no auto-title, com/mab/ui/BasicButton.as)
+      File: ToggleButton  (no auto-title, com/mab/ui/ToggleButton.as)
+      File: easingScrollBar  (com/mab/ui/easingScrollBar.as)
+      File: sliderController  (no auto-title, com/mab/ui/SliderController.as)
+
+      Group: accordion  {
+
+         File: AccordionController  (no auto-title, com/mab/ui/accordion/AccordionController.as)
+         File: AccordionMenuItem  (no auto-title, com/mab/ui/accordion/AccordionMenuItem.as)
+         }  # Group: accordion
+
+      }  # Group: Ui
+
+   Group: Util  {
+
+      File: colorConverter  (no auto-title, com/mab/util/colorConverter.as)
+      File: debug  (no auto-title, com/mab/util/debug.as)
+      File: Delegate  (no auto-title, com/mab/util/Delegate.as)
+      File: quickLoader  (no auto-title, com/mab/util/quickLoader.as)
+      File: Math2  (com/mab/util/Math2.as)
+      }  # Group: Util
+
+   }  # Group: Com
+
+Group: MethodAdditions  {
+
+   File: Array  (methodAdditions/Array.as)
+   File: Function  (methodAdditions/Functions.as)
+   File: MovieClip  (methodAdditions/MovieClip.as)
+   File: Object  (methodAdditions/Object.as)
+   File: String  (methodAdditions/String.as)
+   File: TextField  (methodAdditions/TextField.as)
+   }  # Group: MethodAdditions
+
+File: mainEntryPoint  (mainEntryPoint.as)
+
+Group: Index  {
+
+   Index: Everything
+   Class Index: Classes
+   Function Index: Functions
+   Property Index: Properties
+   Variable Index: Variables
+   }  # Group: Index
+
