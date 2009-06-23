@@ -24,9 +24,10 @@ Date:
 
 */
 
+/*
 import com.mab.util.Math2;
 import flash.geom.Matrix;
-
+*/
 package mab.drawing {
 	import flash.display.Sprite;
 	
@@ -68,9 +69,9 @@ package mab.drawing {
 		 Returns:
 		 A reference to the created MC
 		 */
-		static public function makeBox(props:Object) : Shape {			
+		static public function makeBox(props:Object) : Sprite {			
 			var newBox:Sprite = new Sprite();
-			
+			trace("hey, lets draw somehting")
 			// set the default color to white
 			if(props.color == undefined)
 				props.color = 0xFFFFFF;
@@ -78,16 +79,14 @@ package mab.drawing {
 			newBox.x = props.x;
 			newBox.y = props.y;
 			
+			newBox.graphics.beginFill(0xFFCC00);
+			newBox.graphics.drawRect(0, 0, props.width, props.height);
+			/*
             newBox.graphics.beginFill(props.color);
 			//newBox.graphics.lineStyle(0, 0);
             newBox.graphics.drawRect(0, 0, props.width, props.height);
             newBox.graphics.endFill();
-			
-			ref.x = propOb.x;
-			ref.y = propOb.y;
-			
-			//ref._width = propOb._width;
-			//ref._height = propOb._height;
+			*/
 			
 			boxes.push(newBox);
 			
