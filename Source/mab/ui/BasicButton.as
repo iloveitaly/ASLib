@@ -51,24 +51,24 @@ package mab.ui {
 		public function BasicButton() {
 			super();
 			
-			alpha = _offAlpha;
+			//alpha = _offAlpha;
 			
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-			addEventListener(MouseEvent.MOUSE_DOWN, onPress);
-			addEventListener(MouseEvent.MOUSE_UP, onRelease);
+			addEventListener(MouseEvent.MOUSE_DOWN, onMouseClick);
+			addEventListener(MouseEvent.MOUSE_UP, onMouseRelease);
 		}
 		
-		public function generateHitArea() : void {
-			var invisibleHitArea:Sprite = ShapeMaker.makeBox({width:width, height:height, color:0xFAB});
+		public function generateHitArea(evn:Event) : void {
+			var invisibleHitArea:Sprite = ShapeMaker.makeBox({width:width, height:height, x:0, y:0, color:0xFAB});
 			invisibleHitArea.visible = false;
 			addChild(invisibleHitArea);
-			
 			hitArea = invisibleHitArea;
 		}
 		
 		public function onMouseOver(evn:Event) : void {
-			if(rollAction) {
+			// http://www.jadbox.com/2009/02/as3-optional-callback-method-warning/
+			if(rollAction !== null) {
 				rollAction.call(this, true);
 			} else {
 				alpha = _onAlpha;
@@ -76,14 +76,14 @@ package mab.ui {
 		}
 		
 		public function onMouseOut(evn:Event) : void {
-			if(rollAction) {
+			if(rollAction !== null) {
 				rollAction.call(this, false);
 			} else {
 				alpha = _offAlpha;
 			}
 		}
 		
-		public function onPress(evn:Event) : void {
+		public function onMouseClick(evn:Event) : void {
 			alpha = _pressAlpha;
 		}
 		
@@ -92,10 +92,10 @@ package mab.ui {
 		 onRelease() event. If the target variable is specified action is exacuted in the scope of target.
 		 If target is not specified then action is exacuting in the scope of this button. A reference to this button is always passed to the reciever
 		 */
-		public function onRelease(evn:Event) : void {
+		public function onMouseRelease(evn:Event) : void {
 			alpha = _onAlpha;
 			
-			if(action) {
+			if(action !== null) {
 				if(target) {
 					action.apply(target, [this]);
 				} else {

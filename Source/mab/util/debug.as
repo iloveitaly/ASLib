@@ -76,11 +76,13 @@ package mab.util {
 	 	str - a string to send to the debugger text field
 	 */
 		static public function send(str:*) : void {
-		if(disableTracing) return;
+			if(disableTracing) return;
 		
-		
-			if(!logField) return;
-		initDebugField();
+		initSocket();
+			if(!logField) {
+				initSocket();
+				return;
+			}
 		
 		/*
 		if(arguments.length > 1 && (useMtascMethodTrace || useMtascFileTrace)) {
@@ -138,7 +140,10 @@ package mab.util {
 	 creates & inializes the debug text field 
 	 */
 	static public function initDebugField() : void {
-		if(logField) return;
+		if(logField) {
+			initSocket();
+			return;
+		}
 		
 		logField = new TextField();
 		logField.addEventListener(Event.ADDED_TO_STAGE, function(evn:Event) : void {
@@ -209,6 +214,8 @@ package mab.util {
 		 */
 		static public function initSocket(h:String = "127.0.0.1", p:int = 9994, wait:Boolean = true) : void {
 			mab.util.debug.waitForSocketConnection = wait;
+			
+			if(socket) return;
 			
 			socket = new XMLSocket();
 			socket.addEventListener(Event.CONNECT, function(evn:Event) : void {
