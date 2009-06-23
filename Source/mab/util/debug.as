@@ -19,9 +19,18 @@
  Date:
  06/01/05
 */
-class com.mab.util.debug {
+
+package mab.util {
+	import flash.net.XMLSocket;
+	import Boolean;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+	import flash.events.Event;
+	import flash.display.*;
+	
+	public class debug {
 	/*
-	 Property: txtRef
+	 Property: logField
 	 Reference to the text field used for displaying trace()'s
 	 
 	 Property: count
@@ -48,19 +57,16 @@ class com.mab.util.debug {
 	 Variable: disableTracing
 	 Bool. When true the debug.trace() funtion will not trace any data
 	*/
-	static private var txtRef:TextField;
+	static private var logField:TextField;
 	static private var count:Number = 0;
 	static private var maxResults:Number;
 	static private var socket:XMLSocket;
 	static private var msgStack:Array;
 	
 	static public var connected:Boolean = false;
-	static public var useMtascMethodTrace:Boolean = false;
-	static public var useMtascFileTrace:Boolean = false;
 	static public var waitForSocketConnection:Boolean = false;
 	static public var disableTracing:Boolean = false;
-	static public var quiet:Boolean = false;
-	static public var useJSLog:Boolean = false;
+		static public var rootElement:Object;
 	
 	/*
 	 function: trace
@@ -69,11 +75,14 @@ class com.mab.util.debug {
 	 Parameters:
 	 	str - a string to send to the debugger text field
 	 */
-	static function trace(str):Void {
+		static public function send(str:*) : void {
 		if(disableTracing) return;
 		
+		
+			if(!logField) return;
 		initDebugField();
 		
+		/*
 		if(arguments.length > 1 && (useMtascMethodTrace || useMtascFileTrace)) {
 			if(useMtascMethodTrace && useMtascFileTrace) {
 				str = "["+arguments[3]+":"+arguments[2]+":"+arguments[1]+"]"+str;
@@ -83,6 +92,7 @@ class com.mab.util.debug {
 				str = "["+arguments[2]+":"+arguments[3]+"]"+str;
 			}
 		}
+		*/
 		
 		str += "\n"; //add the newline to end of the str
 		
@@ -96,9 +106,6 @@ class com.mab.util.debug {
 			
 			msgStack.push(str);
 			return; //make sure this message doesn't do anywhere but the msg stack
-		} else if(useJSLog) {
-			getURL("Javascript:console.log('" + str + "');");
-			return;
 		}
 		
 		if(count >= maxResults) {
@@ -106,29 +113,50 @@ class com.mab.util.debug {
 			count = 0;
 		}
 		
-		txtRef.text += str;
+			logField.appendText(str);
+		
 		//count += str.toString().countOf("\n") + 1;
 		count++; //comment the above line and uncomment this line if you dont want to have to use the string additions
 	}
 	
-	public static function dumpObject(ob:Object) {
-		var str = "{\n";
+		public static function dumpObject(ob:Object) : void {
+			var str:String = "{\n";
 		
-		for(var i in ob) {
+			for(var i:String in ob) {
 			str += i+":"+ob[i]+"\n";
 		}
 		
-		debug.trace(str+="}");
+		trace(str+="}");
 	}
+		
+		static public function init(root:DisplayObjectContainer) : void {
+			debug.rootElement = root;
+		}
 	
 	/*
 	 function: initDebugField
 	 creates & inializes the debug text field 
 	 */
-	static function initDebugField(Void):Void {
-		if(txtRef) return;
+	static public function initDebugField() : void {
+		if(logField) return;
 		
+		logField = new TextField();
+		logField.addEventListener(Event.ADDED_TO_STAGE, function(evn:Event) : void {
+			evn.target.stage.setChildIndex(evn.target, 0);
+			evn.target.width = evn.target.stage.stageWidth;
+			evn.target.height = evn.target.stage.stageHeight;
+		});
+		
+		rootElement.addChild(logField);
+				
 		//formatting
+		/*
+		 var format:TextFormat = new TextFormat();
+		 format.font = "Verdana";
+		 format.color = 0xFF0000;
+		 format.size = 10;
+		 format.underline = true;
+		 
 		var format = new TextFormat();
 		format.size = 17;
 		
@@ -137,6 +165,7 @@ class com.mab.util.debug {
 		txtRef.setNewTextFormat(format);
 		txtRef.selectable = false;
 		maxResults = Math.floor(Stage.height/format.size);
+		 */
 	}
 	
 	/*
@@ -147,79 +176,80 @@ class com.mab.util.debug {
 	
 	 	c - The color to set the textfield to
 	*/
-	static function setColor(c):Void {
+	static public function setColor(c:int) : void {
 		debug.initDebugField();
-		var format = new TextFormat();
-		format.color = c;
+		//var format = new TextFormat();
+		//format.color = c;
 		
 		//apply the formatting
-		txtRef.setTextFormat(format);
-		txtRef.setNewTextFormat(format);
+		//txtRef.setTextFormat(format);
+		//txtRef.setNewTextFormat(format);
 	}
 	
-	/*
-	 function: clear
-	 clears the text that is currently in the text field
-	 */
-	static public function clear(Void):Void {
-		txtRef.text = "";
-	}
+		/*
+		 function: clear
+		 clears the text that is currently in the text field
+		 */
+		static public function clear() : void {
+			logField.text = "";
+		}
 	
-	/*
-	 Function: initSocket
-	 Initalizes a socket connection to send trace() input to.
-	 If the connection succeeds all output is sent to the socket server instead of the textfield
-	 
-	 Parameters:
-		h - String specifing a specific host to connect to. If this argument is not specified "localhost" is used
-		p - Number specifing the port to connect to on the host. If this argument is not specified ----
-	 
-	 Returns:
-	 Boolean;
-	 Return value from XMLSocket.connect, if this function returns true it actually doesn't mean you've successfully connected with the server
-	 */
-	static public function initSocket(h, p):Boolean {
-		socket = new XMLSocket();
-		
-		socket.onConnect = function(success:Boolean) {
-			if(success) {
-				if(!com.mab.util.debug.quiet)
+		/*
+		 Function: initSocket
+		 Initalizes a socket connection to send trace() input to.
+		 If the connection succeeds all output is sent to the socket server instead of the textfield
+		 
+		 Parameters:
+			h - String specifing a specific host to connect to. If this argument is not specified "localhost" is used
+			p - Number specifing the port to connect to on the host. If this argument is not specified ----
+		 
+		 Returns:
+		 Boolean;
+		 Return value from XMLSocket.connect, if this function returns true it actually doesn't mean you've successfully connected with the server
+		 */
+		static public function initSocket(h:String = "127.0.0.1", p:int = 9994, wait:Boolean = true) : void {
+			mab.util.debug.waitForSocketConnection = wait;
+			
+			socket = new XMLSocket();
+			socket.addEventListener(Event.CONNECT, function(evn:Event) : void {
+				if(evn.target.connected) {
 					trace("Successfull connection to socket server!");
-			} else {
-				trace("Connection to server failed!");
-				com.mab.util.debug.socket = null; //set the socket to null
-			}
+				} else {
+					trace("Connection to server failed!");
+					mab.util.debug.socket = null; //set the socket to null
+				}
+				
+				mab.util.debug.connected = evn.target.connected;
+				
+				mab.util.debug._clearMsgStack(); //clear the message stack
+			});
 			
-			com.mab.util.debug.connected = success;
+			socket.addEventListener(Event.CLOSE, function(evn:Event) : void {
+				trace("Connection lost");
+				mab.util.debug.connected = false;				
+			});
 			
-			com.mab.util.debug._clearMsgStack(); //clear the message stack
+			socket.connect(h, p);
 		}
-		
-		socket.onClose = function() {
-			trace("Connection lost");
-			com.mab.util.debug.connected = false;
-		}
-		
-		return socket.connect(h ? h : "localhost", p ? p : 9994);
-	}
 	
-	/*
-	 Function: _clearMsgStack
-	 Clears the msgStack if there is one. This is called from the sockets onConnect event, and should not be called anywhere else.
-	 */
-	static public function _clearMsgStack(Void):Void {
-		if(socket && connected && waitForSocketConnection && msgStack) {//if we have a message stack and we have a successfull connection to the server
-			while(msgStack.length) {
-				socket.send(msgStack.shift());
+		/*
+		 Function: _clearMsgStack
+		 Clears the msgStack if there is one. This is called from the sockets onConnect event, and should not be called anywhere else.
+		 */
+		static public function _clearMsgStack() : void {
+			if(socket && connected && waitForSocketConnection && msgStack) {//if we have a message stack and we have a successfull connection to the server
+				while(msgStack.length) {
+					socket.send(msgStack.shift());
+				}
+				
+				msgStack = null;
+			} else if(!socket && !connected && waitForSocketConnection && msgStack) {//if we have a message stack but no successful connection
+				while(msgStack.length) {
+					trace(msgStack.shift());
+				}
+				
+				msgStack = null;
 			}
-			
-			msgStack = null;
-		} else if(!socket && !connected && waitForSocketConnection && msgStack) {//if we have a message stack but no successful connection
-			while(msgStack.length) {
-				trace(msgStack.shift());
-			}
-			
-			msgStack = null;
 		}
 	}
 }
