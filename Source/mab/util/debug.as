@@ -29,43 +29,43 @@ package mab.util {
 	import flash.display.*;
 	
 	public class debug {
-	/*
-	 Property: logField
-	 Reference to the text field used for displaying trace()'s
-	 
-	 Property: count
-	 How many trace() calls have been made, used for determining when to call clear()
-	 
- 	 Property: maxResults
-	 The max amount of lines that will fit on the screen
-	  
-	 Variable: socket
-	 If initSocket() was called, socket represents the XMLSocket connection to a 'trace server'
-	 
-	 Variable: connected
-	 Bool representing if the socket is currently connected to a 'trace server'
-	 
-	 Variable: useMtascMethodTrace
-	 Bool. If it is true the MTASC method trace string is prepended to str
-	 
-	 Variable: useMtascFileTrace
-	 Bool. When true prepends MTASC's file data (file name and line #) to the trace str
-	 
-	 Variable: waitForSocketConnection
-	 Bool. When true and you are trying to connect to a scoket
-	 
-	 Variable: disableTracing
-	 Bool. When true the debug.trace() funtion will not trace any data
-	*/
-	static private var logField:TextField;
-	static private var count:Number = 0;
-	static private var maxResults:Number;
-	static private var socket:XMLSocket;
-	static private var msgStack:Array;
-	
-	static public var connected:Boolean = false;
-	static public var waitForSocketConnection:Boolean = false;
-	static public var disableTracing:Boolean = false;
+		/*
+		 Property: logField
+		 Reference to the text field used for displaying trace()'s
+		 
+		 Property: count
+		 How many trace() calls have been made, used for determining when to call clear()
+		 
+		 Property: maxResults
+		 The max amount of lines that will fit on the screen
+		  
+		 Variable: socket
+		 If initSocket() was called, socket represents the XMLSocket connection to a 'trace server'
+		 
+		 Variable: connected
+		 Bool representing if the socket is currently connected to a 'trace server'
+		 
+		 Variable: useMtascMethodTrace
+		 Bool. If it is true the MTASC method trace string is prepended to str
+		 
+		 Variable: useMtascFileTrace
+		 Bool. When true prepends MTASC's file data (file name and line #) to the trace str
+		 
+		 Variable: waitForSocketConnection
+		 Bool. When true and you are trying to connect to a scoket
+		 
+		 Variable: disableTracing
+		 Bool. When true the debug.trace() funtion will not trace any data
+		*/
+		static private var logField:TextField;
+		static private var count:Number = 0;
+		static private var maxResults:Number;
+		static private var socket:XMLSocket;
+		static private var msgStack:Array;
+		
+		static public var connected:Boolean = false;
+		static public var waitForSocketConnection:Boolean = false;
+		static public var disableTracing:Boolean = false;
 		static public var rootElement:Object;
 	
 	/*
@@ -75,61 +75,47 @@ package mab.util {
 	 Parameters:
 	 	str - a string to send to the debugger text field
 	 */
-		static public function send(str:*) : void {
+		static public function send(str:*, file:String = "", line:String = "") : void {
 			if(disableTracing) return;
+			
+			var messagePrefix:String = "";
+			
+			if(file) messagePrefix += file;
+			if(line) messagePrefix += (file ? ":" : "") + line + ": ";
+			
+			var traceString:String = messagePrefix + str + "\n";
 		
-		initSocket();
-			if(!logField) {
-				initSocket();
+			if(socket && connected) {
+				socket.send(traceString);
 				return;
-			}
-		
-		/*
-		if(arguments.length > 1 && (useMtascMethodTrace || useMtascFileTrace)) {
-			if(useMtascMethodTrace && useMtascFileTrace) {
-				str = "["+arguments[3]+":"+arguments[2]+":"+arguments[1]+"]"+str;
-			} else if(useMtascMethodTrace) {
-				str = "["+arguments[1]+"]"+str;
-			} else if(useMtascFileTrace) {
-				str = "["+arguments[2]+":"+arguments[3]+"]"+str;
-			}
-		}
-		*/
-		
-		str += "\n"; //add the newline to end of the str
-		
-		if(socket && connected) {//we have a socket server connection!
-			socket.send(str);
-			return;
-		} else if(socket && waitForSocketConnection) {
-			if(!msgStack) {
-				msgStack = new Array();
+			} else if(socket && waitForSocketConnection) {
+				if(!msgStack) {
+					msgStack = new Array();
+				}
+				
+				msgStack.push(traceString);
+				return; //make sure this message doesn't do anywhere but the msg stack
 			}
 			
-			msgStack.push(str);
-			return; //make sure this message doesn't do anywhere but the msg stack
+			if(count >= maxResults) {
+				debug.clear();
+				count = 0;
+			}
+		
+			logField.appendText(traceString);
+		
+			count++; //comment the above line and uncomment this line if you dont want to have to use the string additions
 		}
-		
-		if(count >= maxResults) {
-			debug.clear();
-			count = 0;
-		}
-		
-			logField.appendText(str);
-		
-		//count += str.toString().countOf("\n") + 1;
-		count++; //comment the above line and uncomment this line if you dont want to have to use the string additions
-	}
 	
 		public static function dumpObject(ob:Object) : void {
 			var str:String = "{\n";
 		
 			for(var i:String in ob) {
-			str += i+":"+ob[i]+"\n";
-		}
+				str += i + ":" + ob[i] + "\n";
+			}
 		
-		trace(str+="}");
-	}
+			send(str += "}");
+		}
 		
 		static public function init(root:DisplayObjectContainer) : void {
 			debug.rootElement = root;
@@ -140,10 +126,10 @@ package mab.util {
 	 creates & inializes the debug text field 
 	 */
 	static public function initDebugField() : void {
-		if(logField) {
-			initSocket();
-			return;
-		}
+//		if(logField) {
+//			initSocket();
+//			return;
+//		}
 		
 		logField = new TextField();
 		logField.addEventListener(Event.ADDED_TO_STAGE, function(evn:Event) : void {
@@ -220,19 +206,19 @@ package mab.util {
 			socket = new XMLSocket();
 			socket.addEventListener(Event.CONNECT, function(evn:Event) : void {
 				if(evn.target.connected) {
-					trace("Successfull connection to socket server!");
+					send("Successfull connection to socket server!");
+					send("heeeee")
 				} else {
-					trace("Connection to server failed!");
-					mab.util.debug.socket = null; //set the socket to null
+					send("Connection to server failed!");
+					mab.util.debug.socket = null;
 				}
 				
 				mab.util.debug.connected = evn.target.connected;
-				
 				mab.util.debug._clearMsgStack(); //clear the message stack
 			});
 			
 			socket.addEventListener(Event.CLOSE, function(evn:Event) : void {
-				trace("Connection lost");
+				send("Connection lost");
 				mab.util.debug.connected = false;				
 			});
 			
