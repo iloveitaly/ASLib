@@ -207,7 +207,6 @@ package mab.util {
 			socket.addEventListener(Event.CONNECT, function(evn:Event) : void {
 				if(evn.target.connected) {
 					send("Successfull connection to socket server!");
-					send("heeeee")
 				} else {
 					send("Connection to server failed!");
 					mab.util.debug.socket = null;
