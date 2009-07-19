@@ -66,6 +66,7 @@ package mab.util {
 		static public var connected:Boolean = false;
 		static public var waitForSocketConnection:Boolean = false;
 		static public var disableTracing:Boolean = false;
+		static public var showFileAndLine:Boolean = false;
 		static public var rootElement:Object;
 	
 	/*
@@ -80,8 +81,10 @@ package mab.util {
 			
 			var messagePrefix:String = "";
 			
-			if(file) messagePrefix += file;
-			if(line) messagePrefix += (file ? ":" : "") + line + ": ";
+			if(showFileAndLine) {
+				if(file) messagePrefix += file;
+				if(line) messagePrefix += (file ? ":" : "") + line + ": ";
+			}
 			
 			var traceString:String = messagePrefix + str + "\n";
 		
