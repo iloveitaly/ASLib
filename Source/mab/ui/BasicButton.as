@@ -20,6 +20,7 @@ package mab.ui {
 	import flash.display.Sprite;
 	import flash.events.*;
 	import mab.drawing.ShapeMaker;
+	import mab.util.debug;
 	
 	public class BasicButton extends MovieClip {
 		/*
@@ -42,9 +43,9 @@ package mab.ui {
 		public var action:Function;
 		public var rollAction:Function;
 		
-		public var _offAlpha:int = 75;
-		public var _onAlpha:int = 100;
-		public var _pressAlpha:int = 90;
+		public var _offAlpha:Number = 0.75;
+		public var _onAlpha:Number = 1;
+		public var _pressAlpha:Number = .9;
 		
 		private var invisibleHitArea:Sprite;
 		
@@ -68,6 +69,7 @@ package mab.ui {
 		
 		public function onMouseOver(evn:Event) : void {
 			// http://www.jadbox.com/2009/02/as3-optional-callback-method-warning/
+			
 			if(rollAction !== null) {
 				rollAction.call(this, true);
 			} else {
@@ -76,6 +78,7 @@ package mab.ui {
 		}
 		
 		public function onMouseOut(evn:Event) : void {
+			trace("MOUSE OUT");
 			if(rollAction !== null) {
 				rollAction.call(this, false);
 			} else {

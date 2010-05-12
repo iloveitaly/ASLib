@@ -76,8 +76,13 @@ package mab.drawing {
 			newBox.x = props.x;
 			newBox.y = props.y;
 			
-			newBox.graphics.beginFill(0xFFCC00);
-			newBox.graphics.drawRect(0, 0, props.width, props.height);
+			newBox.graphics.beginFill(props.color);
+			
+			if(props.cornerRadius == undefined) {
+				newBox.graphics.drawRect(0, 0, props.width, props.height);
+			} else {
+				newBox.graphics.drawRoundRect(0, 0, props.width, props.height, props.cornerRadius);
+			}
 			
 			boxes.push(newBox);
 			

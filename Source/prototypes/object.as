@@ -17,18 +17,7 @@
  Michael Bianco, http://developer.mabwebdesign.com/
  */
 
-/*
- Function: initBroadcaster
- Inits the object as a EventDispatcher object, if it already hasn't been inited
- */
-
-Object.prototype.initBroadcaster = function():Void {
-	if(!this.__initedBroadcaster) {
-		mx.events.EventDispatcher.initialize(this);
-		this.__initedBroadcaster = true;
-	}
-}
-
+#ifdef NOTSUREYET
 /*
  Function: isInstanceOf
  
@@ -68,6 +57,8 @@ Object.prototype.isMemberOf = function(classRef):Boolean {
 	return true;
 }
 
+#endif
+
 /*
 Function: centerX
 
@@ -77,16 +68,16 @@ Centers the object horizontally depending on the given max x value
 Parameters: 
 xval - [Number] The max x position that the mc could be
 */
-Object.prototype.centerX = function(xval:Number):Void {
-	this._x = Math.round((xval-this._width)/2);
+DisplayObject.prototype.centerX = function(xval:Number) : void {
+	x = Math.round((xval - width) / 2);
 }
 
 /**
  *@description: centers the object vertically depending on the given max y value
  *@param: yval, the max y position that the mc could be
  **/
-Object.prototype.centerY = function(yval:Number):Void {
-	this._y = Math.round((yval - this._height)/2);
+DisplayObject.prototype.centerY = function(yval:Number) : void {
+	y = Math.round((yval - height) / 2);
 }
 
 /**
@@ -94,9 +85,11 @@ Object.prototype.centerY = function(yval:Number):Void {
  *@param: yval, the max y position that the mc could be
  *@param: xval, the max x position that the mc could be
  **/
-Object.prototype.centerXY = function(x:Number, y:Number):Void {
+DisplayObject.prototype.centerXY = function(x:Number, y:Number) : void {
 	this.centerX(x);
 	this.centerY(y);
 }
 
-ASSetPropFlags(Object.prototype, null, 1);
+DisplayObject.prototype.setPropertyIsEnumerable("centerXY", false);
+DisplayObject.prototype.setPropertyIsEnumerable("centerX", false);
+DisplayObject.prototype.setPropertyIsEnumerable("centerY", false);
