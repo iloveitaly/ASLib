@@ -1,5 +1,5 @@
 /*
-Class: com.mab.drawing.shapeMaker
+Class: mab.drawing.shapeMaker
 
 Description:
 Create shapes with ease
@@ -17,19 +17,16 @@ Version:
 1.0
 
 Author:
-Michael Bianco, http://mabwebdesign.com/
+Michael Bianco, http://mabblog.com/
 
 Date:
 11/8/05
 
 */
 
-/*
-import com.mab.util.Math2;
-import flash.geom.Matrix;
-*/
 package mab.drawing {
-	import flash.display.Sprite;
+	import flash.display.*;
+	import flash.geom.*;
 	
 	public class ShapeMaker extends Object {
 		/*
@@ -71,7 +68,7 @@ package mab.drawing {
 		 */
 		static public function makeBox(props:Object) : Sprite {			
 			var newBox:Sprite = new Sprite();
-			trace("hey, lets draw somehting")
+			
 			// set the default color to white
 			if(props.color == undefined)
 				props.color = 0xFFFFFF;
@@ -81,17 +78,77 @@ package mab.drawing {
 			
 			newBox.graphics.beginFill(0xFFCC00);
 			newBox.graphics.drawRect(0, 0, props.width, props.height);
-			/*
-            newBox.graphics.beginFill(props.color);
-			//newBox.graphics.lineStyle(0, 0);
-            newBox.graphics.drawRect(0, 0, props.width, props.height);
-            newBox.graphics.endFill();
-			*/
 			
 			boxes.push(newBox);
 			
 			return newBox;
 		}
+		
+		/*
+		 Function: makeGradientBox
+		 Create a box filled with a gradient
+		 
+		 Parameters:
+		 propOb - a object containing the following properties:
+		 
+		 color, the color of the box. Must be hex value.	
+		 
+		 x, the x cooridnant the box should be drawn	
+		 
+		 y, the y cooridnant the box should be drawn	
+		 
+		 width, the width of the box		
+		 
+		 height, the height of the box
+		 
+		 fromAlpha, the starting alpha value of the gradient
+		 
+		 toAlpha, the ending alpha value of the gradient
+		 
+		 fromColor, the starting color value of the gradient
+		 
+		 toColor, the ending color value of the gradient
+		 
+		 Returns:
+		 A reference to the created Sprite
+		 */
+		
+		static public function makeGradientBox(props:Object) : Sprite {
+			// grabbed some of the code from: http://snipplr.com/view.php?codeview&id=7050
+			
+			if(props.fromColor == undefined && props.toColor == undefined) {
+				props.fromColor = props.toColor = props.color;
+			}
+			
+			if(props.fromAlpha == undefined && props.toAlpha == undefined) {
+				props.fromAlpha = props.toAlpha = 100;
+			}
+			
+			if(props.rotation == undefined) {
+				props.rotation = 0;	
+			}
+			
+			var gradType:String = GradientType.LINEAR;
+			
+			var colors:Array = [ props.fromColor, props.toColor ];
+			var alphas:Array = [ props.fromAlpha, props.toAlpha ];
+			
+			// color distribution ratios.  
+			// The value defines percentage of the width where the color is sampled at 100%
+			var ratios:Array = [ 0, 255 ];
+			
+			// the matrix defines the spread of the colors through the object
+			var matr:Matrix = new Matrix();
+			matr.createGradientBox(props.width, props.height, props.rotation, 0, 0);
+			
+			var gradBox:Sprite = new Sprite();
+			var g:Graphics = gradBox.graphics;
+			g.beginGradientFill(gradType, colors, alphas, ratios, matr, SpreadMethod.PAD);
+			g.drawRect(0, 0, props.width, props.height);
+						
+			return gradBox;
+		}
+		
 
 #ifdef DUMBNESS
 		static public function makeEmptyBox(propOb:Object, path:MovieClip, name:String) : MovieClip {
@@ -123,44 +180,7 @@ package mab.drawing {
 			
 			return ref;
 		}
-		
-		static public function makeGradientBox(propOb:Object, path:MovieClip, name:String) : MovieClip {
-			var ref = path.createEmptyMovieClip(name, path.getNextHighestDepth());
-			
-			if(propOb.fromColor == undefined && propOb.toColor == undefined) {
-				propOb.fromColor = propOb.toColor = propOb.color;
-			}
-			
-			if(propOb.fromAlpha == undefined && propOb.toAlpha == undefined) {
-				propOb.fromAlpha = propOb.toAlpha = 100;
-			}
-			
-			var colors = [propOb.fromColor, propOb.toColor];
-			var alphas = [propOb.fromAlpha, propOb.toAlpha];
-			var ratios = [0, 255];
-			
-			/*
-			if(pos._rotation == 180) {
-				alphas = [10, 50];
-			} else if(pos._rotation == 270) {// right hand side
-				alphas = [30, 50]
-			}
-			 */
-			
-			var	matrix = new Matrix();
-			matrix.createGradientBox(propOb._width, propOb._height, 0, 0, 0);
-			
-			ref.beginGradientFill("linear", colors, alphas, ratios, matrix);
-			ref.moveTo(0, propOb._height);
-			ref.lineTo(propOb._width, propOb._height);
-			ref.lineTo(propOb._width, 0);
-			ref.lineTo(0, 0);
-			ref.lineTo(0, propOb._height);
-			ref.endFill();
-			
-			return ref;
-		}
-		
+				
 		static public function makeBitmapBox(propOb:Object, path:MovieClip, name:String) : MovieClip {
 			var ref = path.createEmptyMovieClip(name, path.getNextHighestDepth());
 			
