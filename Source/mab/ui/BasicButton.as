@@ -52,7 +52,7 @@ package mab.ui {
 		public function BasicButton() {
 			super();
 			
-			//alpha = _offAlpha;
+			alpha = _offAlpha;
 			
 			addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 			addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
@@ -78,7 +78,6 @@ package mab.ui {
 		}
 		
 		public function onMouseOut(evn:Event) : void {
-			trace("MOUSE OUT");
 			if(rollAction !== null) {
 				rollAction.call(this, false);
 			} else {
@@ -102,7 +101,7 @@ package mab.ui {
 				if(target) {
 					action.apply(target, [this]);
 				} else {
-					action(this);
+					action();
 				}
 			}
 		}

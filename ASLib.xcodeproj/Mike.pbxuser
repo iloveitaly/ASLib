@@ -250,8 +250,8 @@
 		sourceTree = "<absolute>";
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1101, 1344}}";
-			sepNavSelRange = "{2212, 0}";
-			sepNavVisRange = "{1211, 1218}";
+			sepNavSelRange = "{1881, 0}";
+			sepNavVisRange = "{1211, 1228}";
 		};
 	};
 	27341A010BCDE7F8009ACC34 /* SliderController.as */ = {
@@ -624,7 +624,7 @@
 		fRef = 274727C50BBF433B00E5D797 /* object.as */;
 		name = "object.as: 102";
 		rLen = 0;
-		rLoc = 2251;
+		rLoc = 2261;
 		rType = 0;
 		vrLen = 908;
 		vrLoc = 1615;
@@ -1129,9 +1129,19 @@
 		fRef = 272EE7630B9CDF6200C5204C /* object.as */;
 		name = "object.as: 90";
 		rLen = 0;
-		rLoc = 2212;
+		rLoc = 2222;
 		rType = 0;
 		vrLen = 1218;
+		vrLoc = 1211;
+	};
+	27A97886119B2BDE006A988A /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 272EE7630B9CDF6200C5204C /* object.as */;
+		name = "object.as: 80";
+		rLen = 0;
+		rLoc = 1881;
+		rType = 0;
+		vrLen = 1228;
 		vrLoc = 1211;
 	};
 	27B0733A0BE83EE80088EA5B /* shapeMaker.as */ = {
@@ -1631,7 +1641,7 @@
 		fRef = 272EE7630B9CDF6200C5204C /* object.as */;
 		name = "object.as: 35";
 		rLen = 0;
-		rLoc = 2429;
+		rLoc = 2439;
 		rType = 0;
 		vrLen = 667;
 		vrLoc = 301;
@@ -2038,6 +2048,7 @@
 			27A97856119B277B006A988A /* PBXTextBookmark */ = 27A97856119B277B006A988A /* PBXTextBookmark */;
 			27A97862119B2852006A988A /* PBXTextBookmark */ = 27A97862119B2852006A988A /* PBXTextBookmark */;
 			27A9786B119B2938006A988A /* PBXTextBookmark */ = 27A9786B119B2938006A988A /* PBXTextBookmark */;
+			27A97886119B2BDE006A988A /* PBXTextBookmark */ = 27A97886119B2BDE006A988A /* PBXTextBookmark */;
 			27B073420BE83EE80088EA5B = 27B073420BE83EE80088EA5B /* PBXTextBookmark */;
 			27B073430BE83EE80088EA5B = 27B073430BE83EE80088EA5B /* PBXTextBookmark */;
 			27B073B20BE854680088EA5B = 27B073B20BE854680088EA5B /* PBXTextBookmark */;

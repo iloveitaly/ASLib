@@ -77,7 +77,7 @@ DisplayObject.prototype.centerX = function(xval:Number) : void {
  *@param: yval, the max y position that the mc could be
  **/
 DisplayObject.prototype.centerY = function(yval:Number) : void {
-	y = Math.round((yval - height) / 2);
+	this.y = Math.round((yval - this.height) / 2);
 }
 
 /**
