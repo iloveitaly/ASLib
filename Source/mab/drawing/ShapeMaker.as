@@ -125,6 +125,10 @@ package mab.drawing {
 			// grabbed some of the code from: http://snipplr.com/view.php?codeview&id=7050
 			
 			if(props.fromColor == undefined && props.toColor == undefined) {
+				if(props.color == undefined) {
+					props.color = 0x000000;
+				}
+				
 				props.fromColor = props.toColor = props.color;
 			}
 			
