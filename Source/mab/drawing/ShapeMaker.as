@@ -73,6 +73,9 @@ package mab.drawing {
 			if(props.color == undefined)
 				props.color = 0xFFFFFF;
 			
+			if(props.x == undefined) props.x = 0;
+			if(props.y == undefined) props.y = 0;
+			
 			newBox.x = props.x;
 			newBox.y = props.y;
 			
