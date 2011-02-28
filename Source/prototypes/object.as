@@ -69,7 +69,7 @@ Parameters:
 xval - [Number] The max x position that the mc could be
 */
 DisplayObject.prototype.centerX = function(xval:Number) : void {
-	x = Math.round((xval - width) / 2);
+	x = Math.round((xval - this.width) / 2);
 }
 
 /**
